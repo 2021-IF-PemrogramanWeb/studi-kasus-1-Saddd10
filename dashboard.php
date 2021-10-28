@@ -1,3 +1,16 @@
+<?php
+//Koneksi ke database
+$conn = mysqli_connect("localhost", "root", "", "pweb-f");
+
+//Ambil data dari tabel work_hours
+$result = mysqli_query($conn, "SELECT * FROM work_hours");
+
+//fetch data
+// while ($hrs = mysqli_fetch_assoc($result)){
+//     var_dump($hrs);
+// }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,7 +22,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Tables</title>
+    <title>Simple Web</title>
 
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -133,10 +146,23 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>Name</th>
+                                            <th>Division</th>
                                             <th>Address</th>
+                                            <th>Phone number</th>
+                                            <th>Work hours (a day)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <?php while( $hrs = mysqli_fetch_assoc($result) ) :?>
+                                        <tr>
+                                            <th><?= $hrs["id"]; ?></th>
+                                            <th><?= $hrs["name"]; ?></th>
+                                            <th><?= $hrs["division"]; ?></th>
+                                            <th><?= $hrs["address"]; ?></th>
+                                            <th><?= $hrs["phone"]; ?></th>
+                                            <th><?= $hrs["hours"]; ?></th>
+                                        </tr>
+                                        <?php endwhile; ?>
                                     </tbody>
                                 </table>
                             </div>
