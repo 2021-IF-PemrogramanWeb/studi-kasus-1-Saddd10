@@ -1,12 +1,3 @@
-<?php
-//Koneksi ke database
-$conn = mysqli_connect("localhost", "root", "", "pweb-f");
-
-//Ambil data dari tabel work_hours
-$result = mysqli_query($conn, "SELECT * FROM work_hours");
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -43,7 +34,7 @@ $result = mysqli_query($conn, "SELECT * FROM work_hours");
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center">
                 <div class="sidebar-brand-text mx-3">PWEB-F</div>
             </a>
 
@@ -86,41 +77,21 @@ $result = mysqli_query($conn, "SELECT * FROM work_hours");
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
-
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Name</th>
-                                            <th>Division</th>
-                                            <th>Address</th>
-                                            <th>Phone number</th>
-                                            <th>Work hours (a day)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php while( $hrs = mysqli_fetch_assoc($result) ) :?>
-                                        <tr>
-                                            <th><?= $hrs["id"]; ?></th>
-                                            <th><?= $hrs["name"]; ?></th>
-                                            <th><?= $hrs["division"]; ?></th>
-                                            <th><?= $hrs["address"]; ?></th>
-                                            <th><?= $hrs["phone"]; ?></th>
-                                            <th><?= $hrs["hours"]; ?></th>
-                                        </tr>
-                                        <?php endwhile; ?>
-                                    </tbody>
-                                </table>
+                    <!-- Bar Chart -->
+                    <div class="row">
+                        <div class="col-xl-8 col-lg-7">
+                            <!-- Bar Chart -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Bar Chart</h6>
+                                </div>
+                                <div class="card-body">
+                                    <!-- <div class="panel-body"><iframe src="barchartjs.php" width="100%" height="300"></iframe></div> -->
+                                    <div class="chart-bar">
+                                        <canvas id="myBarChart"></canvas>
+                                    </div>
+                                    <hr>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -148,13 +119,10 @@ $result = mysqli_query($conn, "SELECT * FROM work_hours");
     <script src="js/sb-admin-2.min.js"></script>
 
     <!-- Page level plugins -->
-    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
     <!-- <script src="vendor/chart.js/Chart.min.js"></script> -->
     <script src="vendor/chart.js/Chart.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="js/demo/datatables-demo.js"></script>
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
     <script src="js/demo/chart-bar-demo.js"></script>
