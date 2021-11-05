@@ -1,4 +1,11 @@
 <?php
+session_start();
+
+if( isset($_SESSION["login"]) ){
+    header("Location: ../index.php");
+    exit;
+}
+
 //Koneksi ke database
 $conn = mysqli_connect("localhost", "root", "", "pweb-f");
 
@@ -13,7 +20,10 @@ if(isset($_POST["login"])) {
 
         $hrs = mysqli_fetch_assoc($result);
         if( $password == $hrs["password"]){
-            header("Location: ../dashboard.php");
+
+            $_SESSION["login"] = true;
+
+            header("Location: ../index.php");
             exit;
         }
     }
@@ -24,9 +34,7 @@ if(isset($_POST["login"])) {
 <html>
     <head>
         <title>Halaman Login</title>
-        <style type="text/css">
-            @import url(style.css);
-        </style>
+        <link href="style.css" rel="stylesheet" type="text/css">
     </head>
     <body>
     <div class="container" id="container">

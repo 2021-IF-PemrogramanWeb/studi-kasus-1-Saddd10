@@ -1,4 +1,11 @@
 <?php
+session_start();
+
+if( !isset($_SESSION["login"]) ){
+    header("Location: login/login.php");
+    exit;
+}
+
 //Koneksi ke database
 $conn = mysqli_connect("localhost", "root", "", "pweb-f");
 
@@ -52,13 +59,13 @@ $result = mysqli_query($conn, "SELECT * FROM work_hours");
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="dashboard.php">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                <a class="nav-link" href="index.php">
+                    <i class="fas fa-fw fa-table"></i>
                     <span>Table</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="chart.php">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <i class="fas fa-fw fa-chart-bar"></i>
                     <span>Chart</span></a>
             </li>
         </ul>
@@ -74,11 +81,20 @@ $result = mysqli_query($conn, "SELECT * FROM work_hours");
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
                     <!-- Sidebar Toggle (Topbar) -->
-                    <form class="form-inline">
                         <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                             <i class="fa fa-bars"></i>
                         </button>
-                    </form>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                                <a href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                        </li>
+                    </ul>
 
 
                 </nav>
@@ -136,6 +152,25 @@ $result = mysqli_query($conn, "SELECT * FROM work_hours");
 
     </div>
     <!-- End of Page Wrapper -->
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Apakah anda yakin?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login/logout.php">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>

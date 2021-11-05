@@ -1,3 +1,20 @@
+<?php
+session_start();
+
+if( !isset($_SESSION["login"]) ){
+    header("Location: login/login.php");
+    exit;
+}
+
+//Koneksi ke database
+$conn = mysqli_connect("localhost", "root", "", "pweb-f");
+
+//Ambil data dari tabel work_hours
+$reasondata = mysqli_query($conn, "SELECT reason FROM reasondb GROUP BY reason ORDER BY id ASC");
+$jmlreason = mysqli_query($conn, "SELECT SUM(jumlah) AS jml FROM reasondb GROUP BY reason ORDER BY id ASC");
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -43,13 +60,13 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="dashboard.php">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                <a class="nav-link" href="index.php">
+                    <i class="fas fa-fw fa-table"></i>
                     <span>Table</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="chart.php">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <i class="fas fa-fw fa-chart-bar"></i>
                     <span>Chart</span></a>
             </li>
         </ul>
@@ -65,38 +82,42 @@
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
                     <!-- Sidebar Toggle (Topbar) -->
-                    <form class="form-inline">
                         <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                             <i class="fa fa-bars"></i>
                         </button>
-                    </form>
 
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                                <a href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                        </li>
+                    </ul>
 
                 </nav>
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    <!-- Bar Chart -->
                     <div class="row">
-                        <div class="col-xl-8 col-lg-7">
-                            <!-- Bar Chart -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Bar Chart</h6>
-                                </div>
-                                <div class="card-body">
-                                    <!-- <div class="panel-body"><iframe src="barchartjs.php" width="100%" height="300"></iframe></div> -->
-                                    <div class="chart-bar">
-                                        <canvas id="myBarChart"></canvas>
-                                    </div>
-                                    <hr>
-                                </div>
+                    <div class="col-6 col-md-12 col-xs-12">
+                        <!-- BAR CHART -->
+                        <div class="card">
+                            <div class="card-body">
+                            <div class="chart">
+                                <canvas id="barChart"></canvas>
                             </div>
+                            </div>
+                            <!-- /.card-body -->
                         </div>
+                        <!-- /.card -->
                     </div>
-
-                </div>
+                    <!-- /.col -->
+                    </div>
+                </div><!-- /.container-fluid -->
                 <!-- /.container-fluid -->
 
             </div>
@@ -107,6 +128,25 @@
 
     </div>
     <!-- End of Page Wrapper -->
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Apakah anda yakin?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login/logout.php">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
@@ -119,13 +159,40 @@
     <script src="js/sb-admin-2.min.js"></script>
 
     <!-- Page level plugins -->
-    <!-- <script src="vendor/chart.js/Chart.min.js"></script> -->
+    <script src="vendor/chart.js/Chart.min.js"></script>
     <script src="vendor/chart.js/Chart.js"></script>
 
-    <!-- Page level custom scripts -->
-    <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script>
-    <script src="js/demo/chart-bar-demo.js"></script>
+    <script>
+        var ctx = document.getElementById("barChart").getContext('2d');
+		var myChart = new Chart(ctx, {
+			type: 'bar',
+			data: {
+				labels: [<?php while($row = mysqli_fetch_assoc($reasondata)) 
+            { echo '"'.$row['reason'].'",'; } ?>],
+				datasets: [{
+					label: '',
+					data: [<?php while($row = mysqli_fetch_assoc($jmlreason)) 
+            { echo '"'.$row['jml'].'",'; } ?>],
+                    backgroundColor: "#4e73df",
+                    hoverBackgroundColor: "#2e59d9",
+                    borderColor: "#4e73df"
+				}]
+			},
+			options: {
+                title: {
+                display: true,
+                text: 'Trend of Reason'
+                },
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero:true
+						}
+					}]
+				}
+			}
+		});
+    </script>
 
 </body>
 
